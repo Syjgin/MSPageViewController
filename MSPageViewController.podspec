@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
-  s.name         = "MSPageViewController"
+  s.name         = "MSPageViewController-syjgin”
   s.version      = "1.0.1"
   s.summary      = "Create UIPageViewControllers using storyboards."
-  s.homepage     = "https://github.com/mindsnacks/MSPageViewController"
+  s.homepage     = "https://github.com/Syjgin/MSPageViewController"
 
   s.license      = { :type => 'WTFPL', :file => 'LICENSE' }
-  s.author       = { "Nacho Soto" => "hello@nachosoto.com" }
+  s.author       = { "Nacho Soto” => "hello@nachosoto.com" }
   
-  s.source       = { :git => "https://github.com/mindsnacks/MSPageViewController.git", :tag => s.version.to_s }
+  s.source       = { :git => "https://github.com/Syjgin/MSPageViewController.git", :tag => s.version.to_s }
   s.platform     = :ios, '6.0'
   s.source_files = 'MSPageViewController/Source/*.{h,m}'
   s.requires_arc = true

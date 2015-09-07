@@ -9,6 +9,11 @@
 #import "MSPageViewController.h"
 #import "MSPageViewController+Protected.h"
 
+@interface MSPageViewController()
+@property NSMutableArray *pages;
+
+@end
+
 @implementation MSPageViewController
 
 - (id)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style
@@ -58,6 +63,7 @@
     [super viewDidLoad];
     
     NSAssert(self.pageCount > 0, @"%@ has no pages", self);
+    self.pages = [[NSMutableArray alloc] initWithCapacity:self.pageCount];
     
     [self setViewControllers:@[[self viewControllerAtIndex:0]]
                    direction:UIPageViewControllerNavigationDirectionForward
@@ -86,6 +92,10 @@
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index {
+    if(index < 0)
+        return nil;
+    if(_pages.count >= index + 1)
+        return [_pages objectAtIndex:index];
     UIViewController<MSPageViewControllerChild> *result = nil;
     
     if (index >= 0 && index < self.pageCount) {
@@ -93,7 +103,7 @@
                  @"This controller is only meant to be used inside of a UIStoryboard");
         
         result = [self.storyboard instantiateViewControllerWithIdentifier:self.pageIdentifiers[(NSUInteger)index]];
-        
+        [self.pages insertObject:result atIndex:index];
         NSParameterAssert(result);
         NSAssert([result conformsToProtocol:@protocol(MSPageViewControllerChild)],
                  @"Child view controller (%@) must conform to %@",
