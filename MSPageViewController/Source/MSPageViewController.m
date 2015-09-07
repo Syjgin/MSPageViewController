@@ -64,7 +64,9 @@
     
     NSAssert(self.pageCount > 0, @"%@ has no pages", self);
     self.pages = [[NSMutableArray alloc] initWithCapacity:self.pageCount];
-    
+    for (int i = 0; i < self.pageCount; i++) {
+        [self.pages addObject:[self.storyboard instantiateViewControllerWithIdentifier:self.pageIdentifiers[(NSUInteger)i]]];
+    }
     [self setViewControllers:@[[self viewControllerAtIndex:0]]
                    direction:UIPageViewControllerNavigationDirectionForward
                     animated:NO
@@ -92,29 +94,22 @@
 }
 
 - (UIViewController *)viewControllerAtIndex:(NSInteger)index {
-    if(index < 0)
+    if(index < 0 || index >= self.pageCount)
         return nil;
-    if(_pages.count >= index + 1)
-        return [_pages objectAtIndex:index];
-    UIViewController<MSPageViewControllerChild> *result = nil;
+    NSAssert(self.storyboard,
+             @"This controller is only meant to be used inside of a UIStoryboard");
     
-    if (index >= 0 && index < self.pageCount) {
-        NSAssert(self.storyboard,
-                 @"This controller is only meant to be used inside of a UIStoryboard");
-        
-        result = [self.storyboard instantiateViewControllerWithIdentifier:self.pageIdentifiers[(NSUInteger)index]];
-        [self.pages insertObject:result atIndex:index];
-        NSParameterAssert(result);
-        NSAssert([result conformsToProtocol:@protocol(MSPageViewControllerChild)],
-                 @"Child view controller (%@) must conform to %@",
-                 result,
-                 NSStringFromProtocol(@protocol(MSPageViewControllerChild)));
-        
-        result.pageIndex = index;
-        
-        [self setUpViewController:result
-                          atIndex:index];
-    }
+    UIViewController<MSPageViewControllerChild> *result = [self.pages objectAtIndex:index];
+    NSParameterAssert(result);
+    NSAssert([result conformsToProtocol:@protocol(MSPageViewControllerChild)],
+             @"Child view controller (%@) must conform to %@",
+             result,
+             NSStringFromProtocol(@protocol(MSPageViewControllerChild)));
+    
+    result.pageIndex = index;
+    
+    [self setUpViewController:result
+                      atIndex:index];
     
     return result;
 }
